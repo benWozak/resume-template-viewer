@@ -1,0 +1,100 @@
+\documentclass{resume} 
+\usepackage[left=0.75in,top=0.6in,right=0.75in,bottom=0.6in]{geometry} 
+\newcommand{\tab}[1]{\hspace{.2667\textwidth}\rlap{#1}}
+\newcommand{\itab}[1]{\hspace{0em}\rlap{#1}}
+
+% Define a command to protect our placeholder
+\newcommand{\placeholdertext}[1]{\texorpdfstring{\protect\detokenize{#1}}{#1}}
+
+% Define placeholders
+\newcommand{\fullname}{FULL_NAME}
+\newcommand{\phonenum}{PHONE}
+\newcommand{\emailaddr}{EMAIL}
+
+\newcommand{\linkedin}{LINKEDIN}
+\newcommand{\github}{GITHUB}
+\newcommand{\portfolio}{PORTFOLIO}
+
+\newcommand{\profile}{PROFILE}
+
+% Experience placeholders
+\newcommand{\companyone}{COMPANY_1}
+\newcommand{\dateone}{DATE_1}
+\newcommand{\titleone}{TITLE_1}
+\newcommand{\bulletoneone}{COMP_1_BULLET_1}
+\newcommand{\bulletonetwo}{COM_1_BULLET_2}
+\newcommand{\bulletonethree}{COMP_1_BULLET_3}
+
+\newcommand{\companytwo}{COMPANY_2}
+\newcommand{\datetwo}{DATE_2}
+\newcommand{\titletwo}{TITLE_2}
+\newcommand{\bullettwoone}{COMP_2_BULLET_1}
+\newcommand{\bullettwotwo}{COMP_2_BULLET_2}
+\newcommand{\bullettwothree}{COMP_2_BULLET_3}
+
+\newcommand{\companythree}{COMPANY_3}
+\newcommand{\datethree}{DATE_3}
+\newcommand{\titlethree}{TITLE_3}
+\newcommand{\bulletthreeone}{COMP_3_BULLET_1}
+\newcommand{\bulletthreetwo}{COMP_3_BULLET_2}
+
+\newcommand{\skills}{SKILLS}
+
+\newcommand{\edinstitution}{ED_INSTITUTION}
+\newcommand{\edlocation}{ED_LOCATION}
+\newcommand{\eddate}{ED_DATE}
+\newcommand{\eddegree}{ED_DEGREE}
+
+
+
+\name{\placeholdertext{FULL_NAME}}
+\address{
+  \faPhone\ \placeholdertext{PHONE} \\
+  \faEnvelope\ \placeholdertext{EMAIL}
+}
+
+\sociallinks{
+  \href{\linkedin}{ \faLinkedin\ LinkedIn} \socialSep
+  \href{\github}{ \faGithub\ GitHub} \socialSep
+  \href{\portfolio}{ \faGlobe\ Portfolio}
+}
+\begin{document}
+
+\begin{rSection}{Profile}
+  \placeholdertext{PROFILE}
+\end{rSection}
+
+
+\begin{rSection}{Experience}
+  \begin{rSubsection}{\placeholdertext{COMPANY_1}}{\em \placeholdertext{DATE_1}}{\placeholdertext{TITLE_1}}{}
+    \item \placeholdertext{COMP_1_BULLET_1}
+    \item \placeholdertext{COMP_1_BULLET_2}
+    \item \placeholdertext{COMP_1_BULLET_3}
+  \end{rSubsection}
+  \begin{rSubsection}{\placeholdertext{COMPANY_2}}{\em \placeholdertext{DATE_2}}{\placeholdertext{TITLE_2}}{}
+    \item \placeholdertext{COMP_2_BULLET_1}
+    \item \placeholdertext{COMP_2_BULLET_2}
+    \item \placeholdertext{COMP_2_BULLET_3}
+  \end{rSubsection}
+  \begin{rSubsection}{\placeholdertext{COMPANY_3}}{\em \placeholdertext{DATE_3}}{\placeholdertext{TITLE_3}}{}
+    \item \placeholdertext{COMP_3_BULLET_1}
+    \item \placeholdertext{COMP_3_BULLET_2}
+    \item \placeholdertext{COMP_3_BULLET_3}
+  \end{rSubsection}
+\end{rSection}
+
+\begin{rSection}{Technical Strengths}
+  \begin{tabular}{ @{} >{\bfseries}l @{\hspace{3ex}} p{0.75\textwidth} }
+    \skills
+  \end{tabular}
+\end{rSection}
+
+\begin{rSection}{Education}
+
+{\bf \placeholdertext{ED_INSTITUTION}, \placeholdertext{ED_LOCATION}} \hfill {\em \placeholdertext{ED_DATE}} 
+\\ \placeholdertext{ED_DEGREE}\hfill {}
+
+\end{rSection}
+
+
+\end{document}
