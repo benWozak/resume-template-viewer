@@ -5,7 +5,7 @@ type Props = {};
 
 function NavBar({}: Props) {
   return (
-    <nav className="navbar bg-neutral text-neutral-content sticky top-0">
+    <nav className="navbar bg-neutral text-neutral-content sticky top-0 z-50">
       <Link href="/" className="btn btn-ghost text-xl">
         Resume Templates
       </Link>
