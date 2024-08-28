@@ -4,7 +4,7 @@ type Props = {};
 
 function Footer({}: Props) {
   return (
-    <footer className="footer bg-neutral text-neutral-content p-4">
+    <footer className="footer bg-neutral text-neutral-content p-4 fixed bottom-0">
       <aside className="flex gap-8 justify-center items-center">
         <img src="/BW_logo_light.svg" alt="logo" height="90" width="90" />
         <p>
