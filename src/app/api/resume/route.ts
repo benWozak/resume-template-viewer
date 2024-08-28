@@ -47,7 +47,6 @@ export async function POST(req: NextRequest) {
   let data;
   try {
     data = await req.json();
-    console.log('Received data:', JSON.stringify(data, null, 2));
   } catch (error) {
     console.error('Error parsing request JSON:', error);
     return NextResponse.json({ success: false, error: 'Invalid JSON in request body' }, { status: 400 });

@@ -1,5 +1,8 @@
 import { generateResume } from "../actions";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 3600;
+
 export default async function ResumePage() {
   const { success, pdfPath, error, debug } = await generateResume();
 

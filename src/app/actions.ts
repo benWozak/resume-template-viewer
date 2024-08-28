@@ -11,7 +11,7 @@ interface GenerateResumeResult {
 
 export async function generateResume(): Promise<GenerateResumeResult> {
   try {
-    console.log('Fetching data from local Strapi CMS...');
+    console.log('Fetching data from Strapi');
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}`, {
       next: { revalidate: 0 }
     });
@@ -21,7 +21,7 @@ export async function generateResume(): Promise<GenerateResumeResult> {
     }
     
     const { data } = await response.json();
-    console.log('Data fetched successfully:', data);
+    // console.log('Data fetched successfully:', data);
 
     // Process the data for LaTeX
     const processedData = {
@@ -67,7 +67,7 @@ export async function generateResume(): Promise<GenerateResumeResult> {
     }
 
     const result = await res.json();
-    console.log('PDF generated successfully:', result);
+    console.log('PDF generated successfully:');
     revalidatePath('/resume');
     return result;
   } catch (error) {
