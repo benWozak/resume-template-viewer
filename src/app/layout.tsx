@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 import NavBar from "@/components/layout/nav-bar";
 import Footer from "@/components/layout/footer";
 
@@ -18,11 +19,13 @@ export default function RootLayout({
 }>) {
   return (
     <html data-theme="fantasy" lang="en">
-      <body className={`${inter.className}  bg-base-200`}>
-        <NavBar />
-        {children}
-        <Footer />
-      </body>
+      <UserProvider>
+        <body className={`${inter.className}  bg-base-200`}>
+          <NavBar />
+          {children}
+          <Footer />
+        </body>
+      </UserProvider>
     </html>
   );
 }

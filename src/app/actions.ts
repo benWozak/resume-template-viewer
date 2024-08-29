@@ -5,6 +5,8 @@ import { db } from '../../db/config';
 import { resume, socials, experience, skills, education } from '../../db/schema';
 import { desc } from 'drizzle-orm';
 import { DEFAULT_PLACEHOLDER } from '@/util/constants'
+import fs from 'fs/promises';
+import path from 'path';
 
 interface GenerateResumeResult {
   success: boolean;
@@ -200,5 +202,16 @@ export async function updateResumeData(data: ResumeData) {
   } catch (error) {
     console.error('Error updating resume data:', error);
     return { success: false, error: (error as Error).message };
+  }
+}
+
+export async function getLatexContent() {
+  const filePath = path.join(process.cwd(), 'latex', 'resume.tex');
+  try {
+    const content = await fs.readFile(filePath, 'utf-8');
+    return content;
+  } catch (error) {
+    console.error('Error reading LaTeX file:', error);
+    return 'Error loading LaTeX content';
   }
 }
