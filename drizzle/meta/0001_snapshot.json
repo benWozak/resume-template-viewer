@@ -1,6 +1,6 @@
 {
-  "id": "50adac9f-4786-4fd6-b413-e2a519f79a2c",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "bf6ae624-725d-428c-90d4-ca7dfd44f627",
+  "prevId": "50adac9f-4786-4fd6-b413-e2a519f79a2c",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -234,10 +234,34 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "name_idx": {
+          "name": "name_idx",
+          "columns": [
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "resume_templates_name_unique": {
+          "name": "resume_templates_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      }
     },
     "public.skills": {
       "name": "skills",

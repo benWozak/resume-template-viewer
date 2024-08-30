@@ -1,0 +1,2 @@
+CREATE UNIQUE INDEX IF NOT EXISTS "name_idx" ON "resume_templates" USING btree ("name");--> statement-breakpoint
+ALTER TABLE "resume_templates" ADD CONSTRAINT "resume_templates_name_unique" UNIQUE("name");
