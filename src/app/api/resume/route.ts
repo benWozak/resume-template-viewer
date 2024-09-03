@@ -53,8 +53,22 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const templatePath = path.join(process.cwd(), 'latex', 'resume.tex');
+    const templatePath = path.join(process.cwd(), 'latex', 'templates', data.templateName, `${data.templateName}.tex`);
+
+    console.log('Checking to see if template exists...')
+    try {
+      await fs.access(templatePath);
+    } catch (error) {
+      console.error('Template file not found:', templatePath);
+      return NextResponse.json({ success: false, error: 'Template not found' }, { status: 404 });
+    }
+
     let template = await fs.readFile(templatePath, 'utf-8');
+
+    console.log('Template found!')
+    console.log('Now populating template data...')
+
+    // console.log(data)
 
     // Replace placeholders
     template = template.replace(/FULL_NAME/g, escapeLatex(data.full_name));
@@ -91,13 +105,12 @@ export async function POST(req: NextRequest) {
     const skillsContent = generateSkillsContent(data.skills);
     template = template.replace(/SKILLS/g, skillsContent);
 
-    // Generate PDF
     console.log('Generating PDF...');
     const input = Readable.from(template);
     const pdfBuffer = await new Promise<Buffer>((resolve, reject) => {
       const chunks: Buffer[] = [];
       const pdf = latex(input, {
-        inputs: path.join(process.cwd(), 'latex'),
+        inputs: path.join(process.cwd(), 'latex', 'templates', data.templateName),
       });
       pdf.on('data', (chunk: Buffer) => chunks.push(chunk));
       pdf.on('end', () => resolve(Buffer.concat(chunks)));

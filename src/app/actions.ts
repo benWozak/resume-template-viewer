@@ -1,51 +1,7 @@
-'use server'
-
-import { revalidatePath } from 'next/cache';
-import { db } from '../../db/config';
-import { resume, socials, experience, skills, education } from '../../db/schema';
-import { desc } from 'drizzle-orm';
-import { DEFAULT_PLACEHOLDER } from '@/util/constants'
-import fs from 'fs/promises';
-import path from 'path';
-
-interface GenerateResumeResult {
-  success: boolean;
-  pdfPath?: string;
-  error?: string;
-  debug?: any;
-}
-
-interface ResumeData {
-  full_name: string;
-  phone: string;
-  email: string;
-  profile: string;
-  socials: {
-    linkedin_url: string;
-    github_url: string;
-    portfolio_url: string;
-  };
-  experience: {
-    id: string;
-    company: string;
-    position: string;
-    startDate: string;
-    endDate: string | null;
-    description: string[];
-  }[];
-  skills: {
-    category: string;
-    items: string;
-  }[];
-  education: {
-    id: string;
-    institution: string;
-    location: string;
-    startDate: string;
-    endDate: string;
-    degree: string;
-  };
-}
+import { db } from '../db';
+import { resumeTemplates, resumeContent, socials, experience, skills, education } from '../db/schema';
+import { desc, eq } from 'drizzle-orm';
+import { DEFAULT_PLACEHOLDER } from '@/util/constants';
 
 function formatDate(date: Date | string | null | undefined): string {
   if (!date) return 'Present';
@@ -55,38 +11,43 @@ function formatDate(date: Date | string | null | undefined): string {
   return date;
 }
 
-export async function generateResume(): Promise<GenerateResumeResult> {
+export async function getResumeTemplates() {
   try {
-    console.log('Fetching data from database');
-    
-    // Fetch data from database
-    const resumeData = await db.select().from(resume).limit(1);
-    const socialsData = await db.select().from(socials).limit(1);
-    const experienceData = await db.select().from(experience).orderBy(desc(experience.startDate));
-    const skillsData = await db.select().from(skills);
-    const educationData = await db.select().from(education).limit(1);
+    const templates = await db.select().from(resumeTemplates);
+    return templates;
+  } catch (error) {
+    console.error('Failed to fetch resume templates:', error);
+    throw new Error('Failed to fetch resume templates');
+  }
+}
 
-    // Process the data for LaTeX
-    const processedData = {
+export async function getResumeData(userId: string) {
+  try {
+    const resumeData = await db.select().from(resumeContent).where(eq(resumeContent.auth0UserId, userId)).limit(1);
+    const socialsData = await db.select().from(socials).where(eq(socials.auth0UserId, userId)).limit(1);
+    const experienceData = await db.select().from(experience).where(eq(experience.auth0UserId, userId)).orderBy(desc(experience.startDate));
+    const skillsData = await db.select().from(skills).where(eq(skills.auth0UserId, userId));
+    const educationData = await db.select().from(education).where(eq(education.auth0UserId, userId)).limit(1);
+
+    return {
       full_name: resumeData[0]?.fullName || DEFAULT_PLACEHOLDER.resume.full_name,
       phone: resumeData[0]?.phone || DEFAULT_PLACEHOLDER.resume.phone,
       email: resumeData[0]?.email || DEFAULT_PLACEHOLDER.resume.email,
-      profile: resumeData[0]?.profile || DEFAULT_PLACEHOLDER.resume.profile,
+      profile: resumeData[0]?.summary || DEFAULT_PLACEHOLDER.resume.profile,
       socials: {
         linkedin_url: socialsData[0]?.linkedinUrl || DEFAULT_PLACEHOLDER.socials.linkedin_url,
         github_url: socialsData[0]?.githubUrl || DEFAULT_PLACEHOLDER.socials.github_url,
         portfolio_url: socialsData[0]?.portfolioUrl || DEFAULT_PLACEHOLDER.socials.portfolio_url,
       },
-      experience: (experienceData.length > 0 ? experienceData : DEFAULT_PLACEHOLDER.experience).map((exp: any) => ({
+      experience: (experienceData.length > 0 ? experienceData : DEFAULT_PLACEHOLDER.experience).map(exp => ({
         company: exp.company,
-        duration: `${formatDate(exp.startDate)} - ${formatDate(exp.endDate)}`,
         position: exp.position,
+        duration: `${formatDate(exp.startDate)} - ${formatDate(exp.endDate)}`,
         description: exp.description ? exp.description.split('\n') : [],
       })),
-      skills: (skillsData.length > 0 ? skillsData : DEFAULT_PLACEHOLDER.skills).map((item: any) => ({
-        id: item.id,
-        skill_title: item.category,
-        skill_items: item.items,
+      skills: (skillsData.length > 0 ? skillsData : DEFAULT_PLACEHOLDER.skills).map(skill => ({
+        skill_title: skill.category,
+        skill_items: skill.items,
       })),
       education: {
         institution: educationData[0]?.institution || DEFAULT_PLACEHOLDER.education.institution,
@@ -95,12 +56,47 @@ export async function generateResume(): Promise<GenerateResumeResult> {
         degree: educationData[0]?.degree || DEFAULT_PLACEHOLDER.education.degree,
       },
     };
+  } catch (error) {
+    console.error('Error fetching resume data:', error);
+    // Return placeholder data in the same structure as the database data
+    return {
+      full_name: DEFAULT_PLACEHOLDER.resume.full_name,
+      phone: DEFAULT_PLACEHOLDER.resume.phone,
+      email: DEFAULT_PLACEHOLDER.resume.email,
+      profile: DEFAULT_PLACEHOLDER.resume.profile,
+      socials: {
+        linkedin_url: DEFAULT_PLACEHOLDER.socials.linkedin_url,
+        github_url: DEFAULT_PLACEHOLDER.socials.github_url,
+        portfolio_url: DEFAULT_PLACEHOLDER.socials.portfolio_url,
+      },
+      experience: DEFAULT_PLACEHOLDER.experience.map(exp => ({
+        company: exp.company,
+        position: exp.position,
+        duration: `${exp.startDate} - ${exp.endDate}`,
+        description: exp.description.split('\n'),
+      })),
+      skills: DEFAULT_PLACEHOLDER.skills.map(skill => ({
+        skill_title: skill.category,
+        skill_items: skill.items,
+      })),
+      education: {
+        institution: DEFAULT_PLACEHOLDER.education.institution,
+        location: DEFAULT_PLACEHOLDER.education.location,
+        duration: `${DEFAULT_PLACEHOLDER.education.startDate} - ${DEFAULT_PLACEHOLDER.education.endDate}`,
+        degree: DEFAULT_PLACEHOLDER.education.degree,
+      },
+    };
+  }
+}
 
-    console.log('Generating PDF...');
+export async function generateResumePDF(userId: string | null, templateName: string) {
+  try {
+    const resumeData = await getResumeData(userId || 'placeholder');
+    
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/resume`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(processedData),
+      body: JSON.stringify({ ...resumeData, templateName }),
     });
 
     if (!res.ok) {
@@ -108,110 +104,12 @@ export async function generateResume(): Promise<GenerateResumeResult> {
     }
 
     const result = await res.json();
-    console.log('PDF generated successfully:');
-    revalidatePath('/resume');
-    return result;
+    return { success: true, pdfPath: result.pdfPath };
   } catch (error) {
-    console.error('Error in generateResume:', error);
+    console.error('Error generating resume PDF:', error);
     return { 
       success: false, 
       error: (error as Error).message,
-      debug: {
-        nextPublicBaseUrl: process.env.NEXT_PUBLIC_BASE_URL,
-        errorStack: (error as Error).stack
-      }
     };
-  }
-}
-
-export async function updateResumeData(data: ResumeData) {
-  try {
-    // Update or insert resume data
-    await db.insert(resume).values({
-      fullName: data.full_name,
-      email: data.email,
-      phone: data.phone,
-      profile: data.profile,
-    }).onConflictDoUpdate({
-      target: resume.id,
-      set: {
-        fullName: data.full_name,
-        email: data.email,
-        phone: data.phone,
-        profile: data.profile,
-      },
-    });
-
-    // Update or insert socials data
-    await db.insert(socials).values({
-      linkedinUrl: data.socials.linkedin_url,
-      githubUrl: data.socials.github_url,
-      portfolioUrl: data.socials.portfolio_url,
-    }).onConflictDoUpdate({
-      target: socials.id,
-      set: {
-        linkedinUrl: data.socials.linkedin_url,
-        githubUrl: data.socials.github_url,
-        portfolioUrl: data.socials.portfolio_url,
-      },
-    });
-
-    // Delete existing experience entries and insert new ones
-    await db.delete(experience);
-    for (const exp of data.experience) {
-      await db.insert(experience).values({
-        //@ts-ignore
-        company: exp.company,
-        position: exp.position,
-        startDate: new Date(exp.startDate),
-        endDate: exp.endDate ? new Date(exp.endDate) : null,
-        description: exp.description.join('\n'),
-      });
-    }
-
-    // Delete existing skills entries and insert new ones
-    await db.delete(skills);
-    for (const skill of data.skills) {
-      await db.insert(skills).values({
-        category: skill.category,
-        items: skill.items,
-      });
-    }
-
-    // Update or insert education data
-    await db.insert(education).values({
-      //@ts-ignore
-      institution: data.education.institution,
-      location: data.education.location,
-      startDate: new Date(data.education.startDate),
-      endDate: new Date(data.education.endDate),
-      degree: data.education.degree,
-    }).onConflictDoUpdate({
-      target: education.id,
-      set: {
-        institution: data.education.institution,
-        location: data.education.location,
-        startDate: data.education.startDate,
-        endDate: data.education.endDate,
-        degree: data.education.degree,
-      },
-    });
-
-    console.log('Resume data updated successfully');
-    return { success: true };
-  } catch (error) {
-    console.error('Error updating resume data:', error);
-    return { success: false, error: (error as Error).message };
-  }
-}
-
-export async function getLatexContent() {
-  const filePath = path.join(process.cwd(), 'latex', 'resume.tex');
-  try {
-    const content = await fs.readFile(filePath, 'utf-8');
-    return content;
-  } catch (error) {
-    console.error('Error reading LaTeX file:', error);
-    return 'Error loading LaTeX content';
   }
 }

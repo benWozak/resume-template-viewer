@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { resumeTemplates } from '../../db/schema.js';
+import { resumeTemplates } from '../db/schema.js';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';

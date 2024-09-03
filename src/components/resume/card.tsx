@@ -1,15 +1,19 @@
 import React from "react";
 import Link from "next/link";
 
-type Props = {};
+type Props = {
+  template: any;
+};
 
-function Card({}: Props) {
+function Card({ template }: Props) {
+  console.log(template);
   return (
-    <Link href="/resume">
+    <Link href={`/${template.name}`}>
       <div className="card bg-base-100 w-96 shadow-xl">
-        <figure>
+        <figure className="relative w-full aspect-[16/9] overflow-hidden">
           <img
-            src="generated_resume.jpg"
+            className="w-full h-full object-cover object-top"
+            src={`${template.name}_demo.jpg`}
             alt="Resume Template"
             height="200"
             width="200"
@@ -20,10 +24,7 @@ function Card({}: Props) {
             Resume v1
             <div className="badge badge-secondary">NEW</div>
           </h2>
-          <p>
-            A concise, single-page professional resume with an efficient layout
-            that balances information density with readability.
-          </p>
+          <p>{template.description}</p>
         </div>
       </div>
     </Link>
