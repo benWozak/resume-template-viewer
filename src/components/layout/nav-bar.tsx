@@ -21,27 +21,34 @@ function NavBar({}: Props) {
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
           {!!user ? (
-            <li>
-              <details>
-                <summary>
-                  <div className="avatar">
-                    <div className="w-10 rounded-full">
-                      {user.picture !== null && (
-                        <img src={user.picture} alt="profile image" />
-                      )}
+            <>
+              <li>
+                <Link className="btn btn-primary" href="/content">
+                  Add/Edit Content
+                </Link>
+              </li>
+              <li>
+                <details>
+                  <summary>
+                    <div className="avatar">
+                      <div className="w-10 rounded-full">
+                        {user.picture !== null && (
+                          <img src={user.picture} alt="profile image" />
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </summary>
-                <ul className="bg-base-100 rounded-t-none p-2">
-                  <li>
-                    <Link href="/profile">Profile</Link>
-                  </li>
-                  <li>
-                    <a href="/api/auth/logout">Logout</a>
-                  </li>
-                </ul>
-              </details>
-            </li>
+                  </summary>
+                  <ul className="bg-base-100 rounded-t-none p-2">
+                    <li>
+                      <Link href="/profile">Profile</Link>
+                    </li>
+                    <li>
+                      <a href="/api/auth/logout">Logout</a>
+                    </li>
+                  </ul>
+                </details>
+              </li>
+            </>
           ) : (
             <li>
               <a href="/api/auth/login">Login</a>

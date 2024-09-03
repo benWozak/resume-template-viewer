@@ -115,3 +115,77 @@ export async function generateResumePDF(userId: string | null, templateName: str
     };
   }
 }
+
+export async function updateResumeData(userId: string, data: any) {
+  try {
+    await db.transaction(async (tx) => {
+      await tx
+        .update(resumeContent)
+        .set({
+          fullName: data.fullName,
+          email: data.email,
+          phone: data.phone,
+          summary: data.summary,
+          updatedAt: new Date(),
+        })
+        .where(eq(resumeContent.auth0UserId, userId));
+    });
+
+    await db.transaction(async (tx) => {
+      await tx
+        .update(socials)
+        .set({
+          linkedinUrl: data.linkedin,
+          githubUrl: data.github,
+          portfolioUrl: data.portfolio
+        })
+        .where(eq(resumeContent.auth0UserId, userId));
+    });
+
+    // experience
+    data.experience.map(async (item: any, index: number) => {
+      await db.transaction(async (tx) => {
+        await tx
+          .update(experience)
+          .set({
+            company: item.company,
+            position: item.position,
+            startDate: item.startDate,
+            endDate: item.endDate,
+            description: item.description,
+          })
+          .where(eq(resumeContent.auth0UserId, userId));
+      });
+    })
+
+    data.skills.map(async(item: any, index: number) => {
+      await db.transaction(async (tx) => {
+        await tx
+          .update(skills)
+          .set({
+            category: item.category,
+            items: item.items
+          })
+          .where(eq(resumeContent.auth0UserId, userId));
+      });
+    })
+
+    await db.transaction(async (tx) => {
+      await tx
+        .update(education)
+        .set({
+          institution: data.education.institution,
+          location: data.education.location,
+          startDate: data.education.startDate,
+          endDate: data.education.endDate,
+          degree: data.education.degree,
+        })
+        .where(eq(resumeContent.auth0UserId, userId));
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating resume data:', error);
+    return { success: false, error: (error as Error).message };
+  }
+}
