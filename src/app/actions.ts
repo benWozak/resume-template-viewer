@@ -1,3 +1,5 @@
+'use server'
+
 import { db } from '../db';
 import { resumeTemplates, resumeContent, socials, experience, skills, education } from '../db/schema';
 import { desc, eq } from 'drizzle-orm';

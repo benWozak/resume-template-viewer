@@ -3,40 +3,14 @@ import fs from 'fs/promises';
 import path from 'path';
 import latex from 'node-latex';
 import { Readable } from 'stream';
-
-function escapeLatex(str: string): string {
-  return str.replace(/([\\{}$&#^_~%])/g, '\\$1');
-}
-
-function formatPhoneNumber(phoneNumber: string): string {
-  const cleaned = phoneNumber.replace(/\D/g, '');
-  
-  const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
-  
-  if (match) {
-    return `(${match[1]}) ${match[2]}-${match[3]}`;
-  }
-  
-  return phoneNumber;
-}
-
-function escapeUrl(url: string): string {
-  return url.replace(/%/g, '\\%').replace(/#/g, '\\#');
-}
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  const month = date.toLocaleString('default', { month: 'short' });
-  const year = date.getFullYear();
-  return `${month} ${year}`;
-}
+import { escapeLatex, formatPhoneNumber, escapeUrl, formatDate } from '@/util/functions/format';
 
 function generateSkillsContent(skills: any[]): string {
   return skills.map((skill, index) => {
     const title = escapeLatex(skill.skill_title);
     const items = escapeLatex(skill.skill_items);
     
-    // Add less vertical space after each item, except the last one
+    // Adds less vertical space after each item, except the last one
     const verticalSpace = index < skills.length - 1 ? '\\\\[0.2em]' : '\\\\';
     
     return `${title} & ${items} ${verticalSpace}`;
