@@ -24,3 +24,10 @@ export function formatDate(dateString: string): string {
   const year = date.getFullYear();
   return `${month} ${year}`;
 }
+
+export function formatSnakeCase(input: string): string {
+  return input
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // Remove all non-word chars except spaces and hyphens
+    .replace(/[\s-]+/g, '_'); // Replace spaces and hyphens with single underscore
+}

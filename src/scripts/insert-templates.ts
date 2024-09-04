@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { formatSnakeCase } from '@/util/functions/format.js';
 
 dotenv.config({ path: '.env.local' });
 
@@ -25,6 +26,7 @@ async function insertTemplates() {
     if (stats.isDirectory()) {
       await db.insert(resumeTemplates).values({
         name: template,
+        slug: formatSnakeCase(template),
         description: `LaTeX resume template ${template}`,
       }).onConflictDoUpdate({
         target: resumeTemplates.name,

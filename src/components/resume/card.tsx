@@ -6,17 +6,14 @@ type Props = {
 };
 
 function Card({ template }: Props) {
-  console.log(template);
   return (
-    <Link href={`/${template.name}`}>
-      <div className="card bg-base-100 w-96 shadow-xl">
+    <div className="card bg-base-100 w-96 shadow-xl">
+      <Link href={`/${template.slug}`}>
         <figure className="relative w-full aspect-[16/9] overflow-hidden">
           <img
-            className="w-full h-full object-cover object-top"
-            src={`${template.name}_demo.jpg`}
+            className="w-full h-full object-cover object-top rounded-2xl"
+            src={`${template.slug}_demo.webp`}
             alt="Resume Template"
-            height="200"
-            width="200"
           />
         </figure>
         <div className="card-body">
@@ -26,8 +23,8 @@ function Card({ template }: Props) {
           </h2>
           <p>{template.description}</p>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }
 

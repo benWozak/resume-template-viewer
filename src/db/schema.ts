@@ -4,13 +4,15 @@ import { relations } from 'drizzle-orm';
 // Resume template table (accessible to unauthenticated users)
 export const resumeTemplates = pgTable('resume_templates', {
   id: serial('id').primaryKey(),
-  name: varchar('name', { length: 255 }).notNull().unique(),
+  name: varchar('name', { length: 255 }).notNull(),
+  slug: varchar('slug', { length: 255 }).notNull().unique(),
   description: text('description'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 }, (table) => {
   return {
     nameIdx: uniqueIndex('name_idx').on(table.name),
+    slugIdx: uniqueIndex('slug_idx').on(table.slug),
   }
 });
 

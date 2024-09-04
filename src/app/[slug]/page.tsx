@@ -1,20 +1,21 @@
 import { notFound } from "next/navigation";
 import { getResumeTemplates, generateResumePDF } from "../actions";
+import { formatSnakeCase } from "@/util/functions/format";
 
 export async function generateStaticParams() {
   const templates = await getResumeTemplates();
   return templates.map((template) => ({
-    templateName: template.name,
+    slug: template.slug,
   }));
 }
 
 export default async function TemplatePage({
   params,
 }: {
-  params: { templateName: string };
+  params: { slug: string };
 }) {
   const templates = await getResumeTemplates();
-  const template = templates.find((t) => t.name === params.templateName);
+  const template = templates.find((t) => t.slug === params.slug);
 
   if (!template) {
     notFound();
@@ -24,7 +25,7 @@ export default async function TemplatePage({
   const userId = null;
   const { success, pdfPath, error } = await generateResumePDF(
     userId,
-    params.templateName
+    template.slug
   );
 
   if (!success || !pdfPath) {

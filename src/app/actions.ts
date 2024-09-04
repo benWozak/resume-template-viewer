@@ -15,7 +15,12 @@ function formatDate(date: Date | string | null | undefined): string {
 
 export async function getResumeTemplates() {
   try {
-    const templates = await db.select().from(resumeTemplates);
+    const templates = await db.select({
+      id: resumeTemplates.id,
+      name: resumeTemplates.name,
+      slug: resumeTemplates.slug,
+      description: resumeTemplates.description,
+    }).from(resumeTemplates);
     return templates;
   } catch (error) {
     console.error('Failed to fetch resume templates:', error);
@@ -187,5 +192,30 @@ export async function updateResumeData(userId: string, data: any) {
   } catch (error) {
     console.error('Error updating resume data:', error);
     return { success: false, error: (error as Error).message };
+  }
+}
+
+export async function updateTemplate(id: number, name?: string, description?: string) {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const response = await fetch(`${baseUrl}/api/update-template`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id, name, description }),
+    });
+
+    const data = await response.json();
+    if (data.success) {
+      console.log('Template updated successfully:', data.updatedTemplate);
+      return { success: true, updatedTemplate: data.updatedTemplate };
+    } else {
+      console.error('Failed to update template:', data.error);
+      return { success: false, error: data.error };
+    }
+  } catch (error) {
+    console.error('Error updating template:', error);
+    return { success: false, error: 'An unexpected error occurred' };
   }
 }

@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import {
+  Montserrat,
+  Merriweather,
+  Lato,
+  Lora,
+  Noto_Sans,
+  Source_Code_Pro,
+} from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import NavBar from "@/components/layout/nav-bar";
 import Footer from "@/components/layout/footer";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Montserrat({ subsets: ["latin"] });
+const inter = Noto_Sans({ subsets: ["latin"], weight: ["400", "700"] });
 
 export const metadata: Metadata = {
   title: "ResumeBuilder | Create Professional Resumes",
