@@ -81,7 +81,7 @@ export default function EditResumePage() {
     if (user?.sub) {
       fetchResumeData(user.sub);
     }
-  }, [user]);
+  }, [user, fetchResumeData]);
 
   async function fetchResumeData(userId: string) {
     const data = await getResumeData(userId);
