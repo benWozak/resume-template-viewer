@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   creator: "Ben Wozak",
   publisher: "ResumeBuilder",
   openGraph: {
-    title: "ResumeBuilder | Craft Your Perfect Resume",
+    title: "ResumeBuilder | Crafting the Perfect Resume",
     description:
       "Create a standout resume in minutes. Choose from professionally designed templates and tailor your resume to land your dream job.",
     url: "https://resume-template-viewer.vercel.app/",
@@ -45,11 +45,8 @@ export const metadata: Metadata = {
     title: "ResumeBuilder | Your Path to Career Success",
     description:
       "Design a professional resume that gets you noticed. Multiple templates, easy customization, and expert tips to help you land interviews.",
-    creator: "@YourTwitterHandle",
     images: ["https://resume-template-viewer.vercel.app/resume_icon.png"],
   },
-  viewport: "width=device-width, initial-scale=1",
-  robots: "index, follow",
   themeColor: "#0047AB",
   manifest: "/manifest.json",
 };

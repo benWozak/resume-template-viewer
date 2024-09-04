@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { getResumeTemplates, generateResumePDF } from "../actions";
-import { formatSnakeCase } from "@/util/functions/format";
 
 export async function generateStaticParams() {
   const templates = await getResumeTemplates();
