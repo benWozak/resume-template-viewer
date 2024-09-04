@@ -7,6 +7,7 @@ import { ResumeData } from "@/util/types";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FullPageLoader } from "@/components/layout/loaders";
 
 // Zod schema for form validation
 const resumeSchema = z.object({
@@ -97,7 +98,7 @@ export default function EditResumePage() {
     }
   }
 
-  if (userLoading) return <div>Loading...</div>;
+  if (userLoading) return <FullPageLoader />;
   if (!user) return <div>Please log in to edit your resume</div>;
   if (!resumeData) return <div>Loading resume data...</div>;
 

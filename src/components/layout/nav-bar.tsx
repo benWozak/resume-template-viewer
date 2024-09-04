@@ -2,13 +2,14 @@
 import React from "react";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { FullPageLoader } from "./loaders";
 
 type Props = {};
 
 function NavBar({}: Props) {
   const { user, error, isLoading } = useUser();
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <FullPageLoader />;
   if (error) return <div>{error.message}</div>;
 
   return (

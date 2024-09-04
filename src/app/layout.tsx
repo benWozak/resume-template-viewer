@@ -1,19 +1,12 @@
 import type { Metadata } from "next";
-import {
-  Montserrat,
-  Merriweather,
-  Lato,
-  Lora,
-  Noto_Sans,
-  Source_Code_Pro,
-} from "next/font/google";
+import { Noto_Sans } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import NavBar from "@/components/layout/nav-bar";
 import Footer from "@/components/layout/footer";
 
-// const inter = Montserrat({ subsets: ["latin"] });
-const inter = Noto_Sans({ subsets: ["latin"], weight: ["400", "700"] });
+// const notoSans = Montserrat({ subsets: ["latin"] });
+const notoSans = Noto_Sans({ subsets: ["latin"], weight: ["400", "700"] });
 
 export const metadata: Metadata = {
   title: "ResumeBuilder | Create Professional Resumes",
@@ -69,7 +62,7 @@ export default function RootLayout({
   return (
     <html data-theme="fantasy" lang="en">
       <UserProvider>
-        <body className={`${inter.className}  bg-base-200`}>
+        <body className={`${notoSans.className}  bg-base-200`}>
           <NavBar />
           {children}
           <Footer />
