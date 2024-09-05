@@ -1,31 +1,39 @@
-export type ExperienceData = {
+export type SocialsData = {
+  linkedin_url: string;
+  github_url: string;
+  portfolio_url: string;
+};
+
+export interface ExperienceData {
   company: string;
   position: string;
-  startDate: string;
-  endDate: string;
-  description: string;
-};
+  duration: {
+    startDate: string;
+    endDate: string | null;
+  };
+  description: string[];
+}
 
 export type SkillsData = {
-  category: string;
-  items: string;
+  skill_title: string;
+  skill_items: string;
 };
 
-export type EducationData = {
+export interface EducationData {
   institution: string;
   location: string;
-  startDate: string;
-  endDate: string;
+  duration: {
+    startDate: string;
+    endDate: string | null;
+  };
   degree: string;
-};
+}
 
 export interface ResumeData {
   full_name: string;
   email: string;
   phone: string;
-  linkedin_url: string;
-  github_url: string;
-  portfolio_url: string;
+  socials: SocialsData;
   summary: string;
   experience: ExperienceData[];
   skills: SkillsData[];

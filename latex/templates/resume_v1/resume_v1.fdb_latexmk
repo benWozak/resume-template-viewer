@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1725038142.08506 "/Users/benwozak/dev/resume-templates/latex/templates/resume_v1/resume_v1.tex" "resume_v1.pdf" "resume_v1" 1725038142.55944 0
-  "/Users/benwozak/dev/resume-templates/latex/templates/resume_v1/resume_v1.tex" 1725038141.27245 3014 a0fb8bd48de9458867e8c870f8e62ef8 ""
+["pdflatex"] 1725559824.44558 "/Users/benwozak/dev/resume-templates/latex/templates/resume_v1/resume_v1.tex" "resume_v1.pdf" "resume_v1" 1725559824.98567 0
+  "/Users/benwozak/dev/resume-templates/latex/templates/resume_v1/resume_v1.tex" 1725559824.20149 3014 9ef28a4402ba751766ab79ae728660ce ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/fira/fir_iln36p.enc" 1570828436 3071 cfa92ee28d698dd9275559d9d1c3a233 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/fontawesome5/fa5brands0.enc" 1622837620 2920 d63721872b8c77041b88e51b8f7c291d ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/fontawesome5/fa5free1.enc" 1622837620 3042 0e2b14b9be7d01075a4c4591d5d1781b ""
@@ -112,10 +112,10 @@
   "/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1721836124.18416 5467645 128b85b7cde5f5edc5cb7f1dd7ff8736 ""
   "/usr/local/texlive/2024/texmf-var/web2c/pdftex/pdflatex.fmt" 1721836104 8221430 d70477d44c48493000ad47b4cbbf8626 ""
   "/usr/local/texlive/2024/texmf.cnf" 1710266656 577 e590dabc9e28c5b61546e15f63eebcdf ""
-  "resume_v1.aux" 1725038142.48477 162 55205a9e8a8eca30d36afb389b0617bf "pdflatex"
+  "resume_v1.aux" 1725559824.90697 162 55205a9e8a8eca30d36afb389b0617bf "pdflatex"
   "resume_v1.cls" 1724781771.22041 5956 75226aae341b2942123da4955bc6d08f ""
-  "resume_v1.out" 1725038142.35498 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "resume_v1.tex" 1725038141.27245 3014 a0fb8bd48de9458867e8c870f8e62ef8 ""
+  "resume_v1.out" 1725559824.76952 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "resume_v1.tex" 1725559824.20149 3014 9ef28a4402ba751766ab79ae728660ce ""
   (generated)
   "resume_v1.aux"
   "resume_v1.log"

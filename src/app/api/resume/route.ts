@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     template = template.replace(/FULL_NAME/g, escapeLatex(data.full_name));
     template = template.replace(/PHONE/g, escapeLatex(formatPhoneNumber(data.phone)));
     template = template.replace(/EMAIL/g, escapeLatex(data.email));
-    template = template.replace(/PROFILE/g, escapeLatex(data.profile));
+    template = template.replace(/SUMMARY/g, escapeLatex(data.summary));
 
     template = template.replace(/LINKEDIN/g, escapeUrl(data.socials.linkedin_url));
     template = template.replace(/GITHUB/g, escapeUrl(data.socials.github_url));

@@ -40,7 +40,7 @@ export async function getResumeData(userId: string) {
       full_name: resumeData[0]?.fullName || DEFAULT_PLACEHOLDER.resume.full_name,
       phone: resumeData[0]?.phone || DEFAULT_PLACEHOLDER.resume.phone,
       email: resumeData[0]?.email || DEFAULT_PLACEHOLDER.resume.email,
-      profile: resumeData[0]?.summary || DEFAULT_PLACEHOLDER.resume.profile,
+      summary: resumeData[0]?.summary || DEFAULT_PLACEHOLDER.resume.summary,
       socials: {
         linkedin_url: socialsData[0]?.linkedinUrl || DEFAULT_PLACEHOLDER.socials.linkedin_url,
         github_url: socialsData[0]?.githubUrl || DEFAULT_PLACEHOLDER.socials.github_url,
@@ -49,7 +49,10 @@ export async function getResumeData(userId: string) {
       experience: (experienceData.length > 0 ? experienceData : DEFAULT_PLACEHOLDER.experience).map(exp => ({
         company: exp.company,
         position: exp.position,
-        duration: `${formatDate(exp.startDate)} - ${formatDate(exp.endDate)}`,
+        duration: {
+          startDate: formatDate(exp.startDate),
+          endDate: exp.endDate ? formatDate(exp.endDate) : null,
+        },
         description: exp.description ? exp.description.split('\n') : [],
       })),
       skills: (skillsData.length > 0 ? skillsData : DEFAULT_PLACEHOLDER.skills).map(skill => ({
@@ -59,7 +62,10 @@ export async function getResumeData(userId: string) {
       education: {
         institution: educationData[0]?.institution || DEFAULT_PLACEHOLDER.education.institution,
         location: educationData[0]?.location || DEFAULT_PLACEHOLDER.education.location,
-        duration: `${formatDate(educationData[0]?.startDate || DEFAULT_PLACEHOLDER.education.startDate)} - ${formatDate(educationData[0]?.endDate || DEFAULT_PLACEHOLDER.education.endDate)}`,
+        duration: {
+          startDate: formatDate(educationData[0]?.startDate || DEFAULT_PLACEHOLDER.education.startDate),
+          endDate: educationData[0]?.endDate ? formatDate(educationData[0].endDate) : null,
+        },
         degree: educationData[0]?.degree || DEFAULT_PLACEHOLDER.education.degree,
       },
     };
@@ -70,7 +76,7 @@ export async function getResumeData(userId: string) {
       full_name: DEFAULT_PLACEHOLDER.resume.full_name,
       phone: DEFAULT_PLACEHOLDER.resume.phone,
       email: DEFAULT_PLACEHOLDER.resume.email,
-      profile: DEFAULT_PLACEHOLDER.resume.profile,
+      summary: DEFAULT_PLACEHOLDER.resume.summary,
       socials: {
         linkedin_url: DEFAULT_PLACEHOLDER.socials.linkedin_url,
         github_url: DEFAULT_PLACEHOLDER.socials.github_url,
@@ -79,7 +85,10 @@ export async function getResumeData(userId: string) {
       experience: DEFAULT_PLACEHOLDER.experience.map(exp => ({
         company: exp.company,
         position: exp.position,
-        duration: `${exp.startDate} - ${exp.endDate}`,
+        duration: {
+          startDate: formatDate(exp.startDate),
+          endDate: exp.endDate ? formatDate(exp.endDate) : null,
+        },
         description: exp.description.split('\n'),
       })),
       skills: DEFAULT_PLACEHOLDER.skills.map(skill => ({
@@ -89,7 +98,10 @@ export async function getResumeData(userId: string) {
       education: {
         institution: DEFAULT_PLACEHOLDER.education.institution,
         location: DEFAULT_PLACEHOLDER.education.location,
-        duration: `${DEFAULT_PLACEHOLDER.education.startDate} - ${DEFAULT_PLACEHOLDER.education.endDate}`,
+        duration: {
+          startDate: formatDate(DEFAULT_PLACEHOLDER.education.startDate),
+          endDate: formatDate(DEFAULT_PLACEHOLDER.education.endDate),
+        },
         degree: DEFAULT_PLACEHOLDER.education.degree,
       },
     };
@@ -147,7 +159,6 @@ export async function updateResumeData(userId: string, data: any) {
         .where(eq(resumeContent.auth0UserId, userId));
     });
 
-    // experience
     data.experience.map(async (item: any, index: number) => {
       await db.transaction(async (tx) => {
         await tx
@@ -155,8 +166,8 @@ export async function updateResumeData(userId: string, data: any) {
           .set({
             company: item.company,
             position: item.position,
-            startDate: item.startDate,
-            endDate: item.endDate,
+            startDate: item.duration.startDate,
+            endDate: item.duration.endDate,
             description: item.description,
           })
           .where(eq(resumeContent.auth0UserId, userId));
@@ -175,18 +186,15 @@ export async function updateResumeData(userId: string, data: any) {
       });
     })
 
-    await db.transaction(async (tx) => {
-      await tx
-        .update(education)
-        .set({
-          institution: data.education.institution,
-          location: data.education.location,
-          startDate: data.education.startDate,
-          endDate: data.education.endDate,
-          degree: data.education.degree,
-        })
-        .where(eq(resumeContent.auth0UserId, userId));
-    });
+    await db.update(education)
+    .set({
+      institution: data.education.institution,
+      location: data.education.location,
+      startDate: data.education.duration.startDate,
+      endDate: data.education.duration.endDate ? data.education.duration.endDate : null,
+      degree: data.education.degree,
+    })
+    .where(eq(education.auth0UserId, userId));
 
     return { success: true };
   } catch (error) {

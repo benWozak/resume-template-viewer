@@ -3,7 +3,7 @@ export const DEFAULT_PLACEHOLDER = {
     full_name: "John Doe",
     phone: "(123) 456-7890",
     email: "john.doe@example.com",
-    profile: "A skilled professional with experience in...",
+    summary: "A skilled professional with experience in...",
   },
   socials: {
     linkedin_url: "https://www.linkedin.com/in/johndoe",
@@ -17,7 +17,7 @@ export const DEFAULT_PLACEHOLDER = {
       startDate: "2020-01-01",
       endDate: "2023-01-01",
       description:
-        "Developed and maintained... \n Did a thing to increase some stuff... \n faught a dragon, saved the company...",
+        "Developed and maintained... \n Did a thing to increase some stuff... \n fought a dragon, saved the company...",
     },
     {
       company: "Example Corp",
@@ -25,7 +25,7 @@ export const DEFAULT_PLACEHOLDER = {
       startDate: "2020-01-01",
       endDate: "2023-01-01",
       description:
-        "Developed and maintained... \n Did a thing to increase some stuff... \n faught a dragon, saved the company...",
+        "Developed and maintained... \n Did a thing to increase some stuff... \n fought a dragon, saved the company...",
     },
     {
       company: "Example Corp",
@@ -33,7 +33,7 @@ export const DEFAULT_PLACEHOLDER = {
       startDate: "2020-01-01",
       endDate: "2023-01-01",
       description:
-        "Developed and maintained... \n Did a thing to increase some stuff... \n faught a dragon, saved the company...",
+        "Developed and maintained... \n Did a thing to increase some stuff... \n fought a dragon, saved the company...",
     },
   ],
   skills: [
