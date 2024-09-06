@@ -3,10 +3,12 @@ import React from "react";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { FullPageLoader } from "./loaders";
+import { useViewportWidth } from "@/util/hooks";
 
 type Props = {};
 
 function NavBar({}: Props) {
+  const viewportWidth = useViewportWidth();
   const { user, error, isLoading } = useUser();
 
   if (isLoading) return <FullPageLoader />;
@@ -18,7 +20,10 @@ function NavBar({}: Props) {
         <Link href="/" className="btn btn-ghost text-2xl">
           ResumeBuilder
         </Link>{" "}
-        | <span className="pr-4"></span> Professional Resume Templates
+        |{" "}
+        {viewportWidth >= 700 && (
+          <span className="pl-4">Professional Resume Templates</span>
+        )}
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal items-center px-1">
