@@ -2,22 +2,20 @@
 import React from "react";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { FullPageLoader } from "./loaders";
 import { useViewportWidth } from "@/util/hooks";
+import FullPageLoader from "./loader";
 
-type Props = {};
-
-function NavBar({}: Props) {
+function NavBar() {
   const viewportWidth = useViewportWidth();
   const { user, error, isLoading } = useUser();
 
-  if (isLoading) return <FullPageLoader />;
+  if (isLoading) return <FullPageLoader data-testid="full-page-loader" />;
   if (error) return <div>{error.message}</div>;
 
   return (
     <nav className="navbar bg-neutral text-neutral-content sticky top-0 z-50 p-0">
       <div className="flex-1">
-        <Link href="/" className="btn btn-ghost text-2xl">
+        <Link href="/" className="btn btn-ghost text-2xl" aria-label="Home">
           ResumeBuilder
         </Link>{" "}
         |{" "}
@@ -30,7 +28,11 @@ function NavBar({}: Props) {
           {!!user ? (
             <>
               <li>
-                <Link className="btn btn-primary btn-sm" href="/content">
+                <Link
+                  className="btn btn-primary btn-sm"
+                  href="/content"
+                  aria-label="Write Content"
+                >
                   Write Content
                 </Link>
               </li>
@@ -41,10 +43,11 @@ function NavBar({}: Props) {
                       tabIndex={0}
                       role="button"
                       className="btn btn-ghost btn-circle avatar"
+                      aria-label="User menu"
                     >
                       <div className="w-10 rounded-full">
                         {user.picture !== null && (
-                          <img src={user.picture} alt="profile image" />
+                          <img src={user.picture} alt="profile" />
                         )}
                       </div>
                     </div>

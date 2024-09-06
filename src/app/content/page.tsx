@@ -7,8 +7,13 @@ import { ResumeData } from "@/util/types";
 import { z } from "zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FullPageLoader } from "@/components/layout/loaders";
 import { toast } from "react-hot-toast";
+
+import dynamic from "next/dynamic";
+
+const FullPageLoader = dynamic(() => import("@/components/layout/loader"), {
+  ssr: false,
+});
 
 const resumeSchema = z.object({
   full_name: z.string().min(1, "Full name is required"),
@@ -78,7 +83,7 @@ const resumeSchema = z.object({
 
 type ResumeFormData = z.infer<typeof resumeSchema>;
 
-export default function EditResumePage() {
+export default function Page() {
   const { user, isLoading: userLoading } = useUser();
   const [isSaving, setIsSaving] = useState(false);
   const [resumeData, setResumeData] = useState<ResumeData | null>(null);
@@ -105,6 +110,7 @@ export default function EditResumePage() {
     if (user?.sub) {
       fetchResumeData(user.sub);
     }
+    // @eslint-ignore react-hooks/exhaustive-deps
   }, [user]);
 
   async function fetchResumeData(userId: string) {

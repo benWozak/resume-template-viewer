@@ -1,10 +1,9 @@
-import React from "react";
-import { FullPageLoader } from "@/components/layout/loaders";
+import dynamic from "next/dynamic";
 
-type Props = {};
+const FullPageLoader = dynamic(() => import("@/components/layout/loader"), {
+  ssr: false,
+});
 
-function loading({}: Props) {
+export default function Loading() {
   return <FullPageLoader />;
 }
-
-export default loading;

@@ -1,3 +1,10 @@
+export type Template = {
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+};
+
 export type SocialsData = {
   linkedin_url: string;
   github_url: string;

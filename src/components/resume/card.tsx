@@ -1,19 +1,20 @@
 import React from "react";
 import Link from "next/link";
+import { Template } from "@/util/types";
 
 type Props = {
-  template: any;
+  template: Template;
 };
 
 function Card({ template }: Props) {
   return (
     <div className="card bg-base-100 w-96 shadow-xl">
-      <Link href={`/${template.slug}`}>
+      <Link href={`/${template.slug}`} aria-label="template page link">
         <figure className="relative w-full aspect-[16/9] overflow-hidden">
           <img
             className="w-full h-full object-cover object-top rounded-2xl"
             src={`${template.slug}_demo.webp`}
-            alt="Resume Template"
+            alt={`${template.name} Template`}
           />
         </figure>
         <div className="card-body">

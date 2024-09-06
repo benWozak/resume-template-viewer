@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+// import { notFound } from "next/navigation";
 import { getResumeTemplates, generateResumePDF } from "../actions";
 
 export async function generateStaticParams() {
@@ -17,7 +17,7 @@ export default async function TemplatePage({
   const template = templates.find((t) => t.slug === params.slug);
 
   if (!template) {
-    notFound();
+    return <div>No Data Found</div>;
   }
 
   // TODO: Replace null with actual user ID from authentication when implemented
