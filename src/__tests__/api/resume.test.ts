@@ -53,10 +53,9 @@ describe('/api/resume', () => {
       templateName: 'resume_v1'
     }
 
-    const req = new NextRequest('http://localhost:3000/api/resume', {
-      method: 'POST',
-      body: JSON.stringify(mockRequestBody)
-    })
+    const req = {
+      json: () => Promise.resolve(mockRequestBody)
+    } as unknown as NextRequest
 
     // Mock file system operations
     vi.mocked(fs.access).mockResolvedValue(undefined)
@@ -97,11 +96,25 @@ describe('/api/resume', () => {
     expect(mockLatex).toHaveBeenCalled()
   })
 
-  it('should handle template not found error', async () => {
-    const req = new NextRequest('http://localhost:3000/api/resume', {
-      method: 'POST',
-      body: JSON.stringify({ templateName: 'non_existent_template' })
+  it('should handle invalid JSON in request body', async () => {
+    const req = {
+      json: () => Promise.reject(new Error('Invalid JSON'))
+    } as unknown as NextRequest
+
+    const response = await POST(req)
+    const data = await response.json()
+
+    expect(response.status).toBe(400)
+    expect(data).toEqual({
+      success: false,
+      error: 'Invalid JSON in request body'
     })
+  })
+
+  it('should handle template not found error', async () => {
+    const req = {
+      json: () => Promise.resolve({ templateName: 'non_existent_template' })
+    } as unknown as NextRequest
 
     vi.mocked(fs.access).mockRejectedValue(new Error('File not found'))
 
@@ -115,11 +128,10 @@ describe('/api/resume', () => {
     })
   })
 
-  it('should handle invalid JSON in request body', async () => {
-    const req = new NextRequest('http://localhost:3000/api/resume', {
-      method: 'POST',
-      body: 'invalid json'
-    })
+  it('should handle invalid JSON in request body (alternative test)', async () => {
+    const req = {
+      json: () => Promise.reject(new Error('Invalid JSON'))
+    } as unknown as NextRequest
 
     const response = await POST(req)
     const data = await response.json()
