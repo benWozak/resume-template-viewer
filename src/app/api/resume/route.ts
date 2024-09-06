@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
 
     template = template.replace(/ED_INSTITUTION/g, escapeLatex(data.education.institution));
     template = template.replace(/ED_LOCATION/g, escapeLatex(data.education.location));
-    template = template.replace(/ED_DATE/g, escapeLatex(`${formatDate(data.education.duration.split(' - ')[0])} - ${formatDate(data.education.duration.split(' - ')[1])}`));
+    template = template.replace(/ED_DATE/g, escapeLatex(`${formatDate(data.education.duration.startDate)} - ${formatDate(data.education.duration.endDate)}`));
     template = template.replace(/ED_DEGREE/g, escapeLatex(data.education.degree));
 
     data.experience.forEach((exp: any, index: number) => {
@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
 
       template = template.replace(new RegExp(companyPlaceholder, 'g'), escapeLatex(exp.company));
       template = template.replace(new RegExp(datePlaceholder, 'g'), 
-        `${formatDate(exp.duration.split(' - ')[0])} - ${formatDate(exp.duration.split(' - ')[1])}`
+        `${formatDate(exp.duration.startDate)} - ${formatDate(exp.duration.endDate)}`
       );
       template = template.replace(new RegExp(titlePlaceholder, 'g'), escapeLatex(exp.position));
 

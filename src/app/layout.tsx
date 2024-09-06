@@ -4,6 +4,7 @@ import "./globals.css";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import NavBar from "@/components/layout/nav-bar";
 import Footer from "@/components/layout/footer";
+import { Toaster } from "react-hot-toast";
 
 // const notoSans = Montserrat({ subsets: ["latin"] });
 const notoSans = Noto_Sans({ subsets: ["latin"], weight: ["400", "700"] });
@@ -62,6 +63,7 @@ export default function RootLayout({
         <body className={`${notoSans.className}  bg-base-200`}>
           <NavBar />
           {children}
+          <Toaster />
           <Footer />
         </body>
       </UserProvider>

@@ -136,65 +136,115 @@ export async function generateResumePDF(userId: string | null, templateName: str
 export async function updateResumeData(userId: string, data: any) {
   try {
     await db.transaction(async (tx) => {
-      await tx
-        .update(resumeContent)
-        .set({
-          fullName: data.fullName,
+      // Check if user exists in resume_content
+      const existingUser = await tx
+        .select()
+        .from(resumeContent)
+        .where(eq(resumeContent.auth0UserId, userId))
+        .limit(1);
+
+      if (existingUser.length === 0) {
+        // If user doesn't exist, create a new entry
+        await tx.insert(resumeContent).values({
+          auth0UserId: userId,
+          fullName: data.full_name,
           email: data.email,
           phone: data.phone,
           summary: data.summary,
           updatedAt: new Date(),
-        })
-        .where(eq(resumeContent.auth0UserId, userId));
-    });
-
-    await db.transaction(async (tx) => {
-      await tx
-        .update(socials)
-        .set({
-          linkedinUrl: data.linkedin,
-          githubUrl: data.github,
-          portfolioUrl: data.portfolio
-        })
-        .where(eq(resumeContent.auth0UserId, userId));
-    });
-
-    data.experience.map(async (item: any, index: number) => {
-      await db.transaction(async (tx) => {
+        });
+      } else {
+        // If user exists, update their information
         await tx
-          .update(experience)
+          .update(resumeContent)
           .set({
-            company: item.company,
-            position: item.position,
-            startDate: item.duration.startDate,
-            endDate: item.duration.endDate,
-            description: item.description,
+            fullName: data.full_name,
+            email: data.email,
+            phone: data.phone,
+            summary: data.summary,
+            updatedAt: new Date(),
           })
           .where(eq(resumeContent.auth0UserId, userId));
-      });
-    })
+      }
 
-    data.skills.map(async(item: any, index: number) => {
-      await db.transaction(async (tx) => {
+      // Update socials
+      const existingSocials = await tx
+        .select()
+        .from(socials)
+        .where(eq(socials.auth0UserId, userId))
+        .limit(1);
+
+      if (existingSocials.length === 0) {
+        await tx.insert(socials).values({
+          auth0UserId: userId,
+          linkedinUrl: data.socials.linkedin_url,
+          githubUrl: data.socials.github_url,
+          portfolioUrl: data.socials.portfolio_url,
+        });
+      } else {
         await tx
-          .update(skills)
+          .update(socials)
           .set({
-            category: item.category,
-            items: item.items
+            linkedinUrl: data.socials.linkedin_url,
+            githubUrl: data.socials.github_url,
+            portfolioUrl: data.socials.portfolio_url,
           })
-          .where(eq(resumeContent.auth0UserId, userId));
-      });
-    })
+          .where(eq(socials.auth0UserId, userId));
+      }
 
-    await db.update(education)
-    .set({
+      // Update experience
+      await tx.delete(experience).where(eq(experience.auth0UserId, userId));
+      await tx.insert(experience).values(
+        data.experience.map((exp: any) => ({
+          auth0UserId: userId,
+          company: exp.company,
+          position: exp.position,
+          startDate: exp.duration.startDate,
+          endDate: exp.duration.endDate ? exp.duration.endDate : null,
+          description: exp.description.join('\n'),
+        }))
+      );
+
+      // Update skills
+      await tx.delete(skills).where(eq(skills.auth0UserId, userId));
+      await tx.insert(skills).values(
+        data.skills.map((skill: any) => ({
+          auth0UserId: userId,
+          category: skill.skill_title,
+          items: skill.skill_items,
+        }))
+      );
+
+    // Update education
+    const existingEducation = await tx
+      .select()
+      .from(education)
+      .where(eq(education.auth0UserId, userId))
+      .limit(1);
+
+    if (existingEducation.length === 0) {
+    await tx.insert(education).values({
+      //@ts-ignore
+      auth0UserId: userId,
       institution: data.education.institution,
       location: data.education.location,
       startDate: data.education.duration.startDate,
       endDate: data.education.duration.endDate ? data.education.duration.endDate : null,
       degree: data.education.degree,
-    })
-    .where(eq(education.auth0UserId, userId));
+    });
+    } else {
+    await tx
+      .update(education)
+      .set({
+        institution: data.education.institution,
+        location: data.education.location,
+        startDate: data.education.duration.startDate,
+        endDate: data.education.duration.endDate ? data.education.duration.endDate : null,
+        degree: data.education.degree,
+      })
+      .where(eq(education.auth0UserId, userId));
+    }
+    });
 
     return { success: true };
   } catch (error) {

@@ -8,6 +8,7 @@ import { z } from "zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FullPageLoader } from "@/components/layout/loaders";
+import { toast } from "react-hot-toast";
 
 const resumeSchema = z.object({
   full_name: z.string().min(1, "Full name is required"),
@@ -79,6 +80,7 @@ type ResumeFormData = z.infer<typeof resumeSchema>;
 
 export default function EditResumePage() {
   const { user, isLoading: userLoading } = useUser();
+  const [isSaving, setIsSaving] = useState(false);
   const [resumeData, setResumeData] = useState<ResumeData | null>(null);
   const {
     register,
@@ -117,7 +119,20 @@ export default function EditResumePage() {
 
   async function onSubmit(data: ResumeFormData) {
     if (user?.sub) {
-      await updateResumeData(user.sub, data);
+      setIsSaving(true);
+      try {
+        const result = await updateResumeData(user.sub, data);
+        if (result.success) {
+          toast.success("Resume saved successfully!");
+        } else {
+          toast.error("Failed to save resume. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error saving resume:", error);
+        toast.error("An unexpected error occurred. Please try again.");
+      } finally {
+        setIsSaving(false);
+      }
     }
   }
 
@@ -302,8 +317,8 @@ export default function EditResumePage() {
         </section>
 
         <div className="flex justify-end">
-          <button type="submit" className="btn btn-primary">
-            Save Resume
+          <button type="submit" className="btn btn-primary" disabled={isSaving}>
+            {isSaving ? "Saving..." : "Save Resume"}
           </button>
         </div>
       </form>
