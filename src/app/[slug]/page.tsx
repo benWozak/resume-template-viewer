@@ -40,7 +40,6 @@ export default async function TemplatePage({
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-4">{template.name}</h1>
       <p className="text-gray-600 mb-4">{template.description}</p>
-      Here is my solution to this problem.
       <object data={pdfPath} type="application/pdf" width="100%" height="600px">
         <embed src={pdfPath} width="100%" height="800px" />
       </object>
