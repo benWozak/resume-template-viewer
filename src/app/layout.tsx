@@ -48,8 +48,6 @@ export const metadata: Metadata = {
       "Design a professional resume that gets you noticed. Multiple templates, easy customization, and expert tips to help you land interviews.",
     images: ["https://resume-template-viewer.vercel.app/resume_icon.png"],
   },
-  themeColor: "#0047AB",
-  manifest: "/manifest.json",
 };
 
 export default function RootLayout({

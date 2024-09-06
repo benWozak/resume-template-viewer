@@ -138,7 +138,7 @@ export default function EditResumePage() {
 
   if (userLoading) return <FullPageLoader />;
   if (!user) return <div>Please log in to edit your resume</div>;
-  if (!resumeData) return <div>Loading resume data...</div>;
+  if (!resumeData) return <FullPageLoader />;
 
   return (
     <main className="container mx-auto max-w-4xl p-4">

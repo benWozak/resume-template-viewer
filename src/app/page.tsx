@@ -2,8 +2,6 @@ import { use, Suspense } from "react";
 import { getResumeTemplates } from "./actions";
 import Card from "@/components/resume/card";
 
-import { FullPageLoader } from "@/components/layout/loaders";
-
 function TemplateList() {
   const templates = use(getResumeTemplates());
 
@@ -20,9 +18,9 @@ export default async function Home() {
   return (
     <main className="py-6">
       <div className="container m-auto">
-        <Suspense fallback={<FullPageLoader />}>
-          <TemplateList />
-        </Suspense>
+        {/* <Suspense fallback={<FullPageLoader />}> */}
+        <TemplateList />
+        {/* </Suspense> */}
       </div>
     </main>
   );
