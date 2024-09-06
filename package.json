@@ -6,8 +6,7 @@
   "scripts": {
     "clean": "rm -rf .next && rm -rf node_modules",
     "dev": "next dev",
-    "build": "next build",
-    "build:test": "npm run test:ci && next build",
+    "build": "npm run test:ci && next build",
     "start": "next start",
     "lint": "next lint",
     "migrate": "tsx db/migrate.ts",
